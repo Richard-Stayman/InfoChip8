@@ -301,23 +301,6 @@ void InfoChip8_KeyState( void )
 {
   /* Key 1 */
 #if 0
-  Key =   ( GetAsyncKeyState( '0' ) < 0 )         | \
-        ( ( GetAsyncKeyState( '1' ) < 0 ) <<  1 ) | \
-        ( ( GetAsyncKeyState( '2' ) < 0 ) <<  2 ) | \
-        ( ( GetAsyncKeyState( '3' ) < 0 ) <<  3 ) | \
-        ( ( GetAsyncKeyState( '4' ) < 0 ) <<  4 ) | \
-        ( ( GetAsyncKeyState( '5' ) < 0 ) <<  5 ) | \
-        ( ( GetAsyncKeyState( '6' ) < 0 ) <<  6 ) | \
-        ( ( GetAsyncKeyState( '7' ) < 0 ) <<  7 ) | \
-        ( ( GetAsyncKeyState( '8' ) < 0 ) <<  8 ) | \
-        ( ( GetAsyncKeyState( '9' ) < 0 ) <<  9 ) | \
-        ( ( GetAsyncKeyState( 'A' ) < 0 ) << 10 ) | \
-        ( ( GetAsyncKeyState( 'B' ) < 0 ) << 11 ) | \
-        ( ( GetAsyncKeyState( 'C' ) < 0 ) << 12 ) | \
-        ( ( GetAsyncKeyState( 'D' ) < 0 ) << 13 ) | \
-        ( ( GetAsyncKeyState( 'E' ) < 0 ) << 14 ) | \
-        ( ( GetAsyncKeyState( 'F' ) < 0 ) << 15 );
-#else
   Key =   ( GetAsyncKeyState( 'B' ) < 0 )         | \
         ( ( GetAsyncKeyState( '4' ) < 0 ) <<  1 ) | \
         ( ( GetAsyncKeyState( '5' ) < 0 ) <<  2 ) | \
@@ -334,6 +317,23 @@ void InfoChip8_KeyState( void )
         ( ( GetAsyncKeyState( 'U' ) < 0 ) << 13 ) | \
         ( ( GetAsyncKeyState( 'J' ) < 0 ) << 14 ) | \
         ( ( GetAsyncKeyState( 'M' ) < 0 ) << 15 );
+#else
+  Key =   ( GetAsyncKeyState( 'X' ) < 0 )         | \
+        ( ( GetAsyncKeyState( '1' ) < 0 ) <<  1 ) | \
+        ( ( GetAsyncKeyState( '2' ) < 0 ) <<  2 ) | \
+        ( ( GetAsyncKeyState( '3' ) < 0 ) <<  3 ) | \
+        ( ( GetAsyncKeyState( 'Q' ) < 0 ) <<  4 ) | \
+        ( ( GetAsyncKeyState( 'W' ) < 0 ) <<  5 ) | \
+        ( ( GetAsyncKeyState( 'E' ) < 0 ) <<  6 ) | \
+        ( ( GetAsyncKeyState( 'A' ) < 0 ) <<  7 ) | \
+        ( ( GetAsyncKeyState( 'S' ) < 0 ) <<  8 ) | \
+        ( ( GetAsyncKeyState( 'D' ) < 0 ) <<  9 ) | \
+        ( ( GetAsyncKeyState( 'Z' ) < 0 ) << 10 ) | \
+        ( ( GetAsyncKeyState( 'C' ) < 0 ) << 11 ) | \
+        ( ( GetAsyncKeyState( '4' ) < 0 ) << 12 ) | \
+        ( ( GetAsyncKeyState( 'R' ) < 0 ) << 13 ) | \
+        ( ( GetAsyncKeyState( 'F' ) < 0 ) << 14 ) | \
+        ( ( GetAsyncKeyState( 'V' ) < 0 ) << 15 );
 #endif
 
 #if 0
