@@ -9,7 +9,8 @@
 /*-------------------------------------------------------------------*/
 /*  CPU Resources                                                    */
 /*-------------------------------------------------------------------*/
-
+/* temp */
+int temp;
 /* Registers */
 WORD PC;
 WORD I;
@@ -48,11 +49,11 @@ int CPU_Step( int cycle )
     case 0x0000:
       /* 0x00E0 : Erase the Screen */
       if ( INST == 0x00E0 ) {
-	 PPU_Erase(); 
-      } 
+	 PPU_Erase();
+      }
       /* 0x00EE : Return from a CHIP-8 subroutine */
       else if ( INST == 0x00EE ) {
-	SP++; 
+	SP++;
 	PC = STACK[ SP & 0xF ];
       }
       break;
@@ -78,72 +79,93 @@ int CPU_Step( int cycle )
       /* 0x4XKK : Skip next instruction if VX != KK */
       if ( VX != KK ) { PC += 2; }
       break;
-      
+
     case 0x5000:
       /* 0x5XY0 : Skip next instruction if VX == VY */
       if ( VX == VY ) { PC += 2; }
       break;
 
     case 0x6000:
-      /* 0x6XKK : VX = KK */ 
+      /* 0x6XKK : VX = KK */
       VX = KK;
       break;
 
     case 0x7000:
-      /* 0x7XKK : VX = VX + KK */ 
+      /* 0x7XKK : VX = VX + KK */
       VX += KK;
       break;
 
     case 0x8000:
       switch ( INST & 0x000F ) {
-      /* 0x8XY0 : VX = VY */ 
-      case 0x0: 	
+      /* 0x8XY0 : VX = VY */
+      case 0x0:
 	 VX = VY;
 	 break;
 
-      /* 0x8XY1 : VX = VX OR VY */ 	 
+      /* 0x8XY1 : VX = VX OR VY */
       case 0x1:
 	 VX |= VY;
+     VF = 0;
 	 break;
 
-      /* 0x8XY2 : VX = VX AND VY */ 	 
+      /* 0x8XY2 : VX = VX AND VY */
       case 0x2:
 	 VX &= VY;
-	 break;
-	 
-      /* 0x8XY3 : VX = VX XOR VY */ 	 
-      case 0x3:
-	 VX ^= VY;
+     VF = 0;
 	 break;
 
-      /* 0x8XY4 : VX = VX + VY, VF = Carry */ 	 
+      /* 0x8XY3 : VX = VX XOR VY */
+      case 0x3:
+	 VX ^= VY;
+     VF = 0;
+	 break;
+
+      /* 0x8XY4 : VX = VX + VY, VF = Carry */
       case 0x4:
-	 VF = ( (WORD)VX + VY ) & 0x100 ? 1 : 0;
-        VX += VY;
+	 VX += VY;
+     if (VY <= VX) {
+       VF = 0;
+    } else {
+      VF = 1;
+    }
 	 break;
 
       /* 0x8XY5 : VX = VX - VY, VF = Not Borrow */
       case 0x5:
-	 VF = ( VX < VY ) ? 0 : 1;
-        VX -= VY;
+	 if (VX >= VY) {
+       temp = 1;
+    } else {
+       temp = 0;
+    }
+    VX -= VY;
+    VF = temp;
 	 break;
 
       /* 0x8XY6 : VX = VX SHR 1 ( VX = VX / 2 ), VF = Carry */
       case 0x6:
-	 VF = VX & 0x01;
-	 VX >>= 1;
+	 VX = VY;
+     temp = VX & 0x01;
+     VX >>= 1;
+     VF = temp;
 	 break;
 
       /* 0x8XY7 : VX = VY - VX, VF = Not Borrow */
       case 0x7:
-	 VF = ( VY < VX ) ? 0 : 1;
-        VX = VY - VX;
+	 if (VX <= VY) {
+       temp = 1;
+    } else {
+      temp = 0;
+    }
+    VX = VY - VX;
+    VF = temp;
 	 break;
 
       /* 0x8XYE : VX = VX SHL 1 ( VX = VX * 2 ), VF = Carry */
       case 0xE:
-	 VF = VX & 0x80 ? 1 : 0;
-	 VX <<= 1;
+	 VX = VY;
+     temp = VX & 0x80 ? 1 : 0;
+     VX <<= 1;
+     VF = temp;
 	 break;
 
       /* Unknown Instruction */
@@ -236,7 +258,7 @@ int CPU_Step( int cycle )
 	 I = CHIP8_FONT_TOP + VX * 5;
 	 break;
 
-      /* 0xFX33 : Store BCD representation of VX in M(I)..M(I+2) */	 
+      /* 0xFX33 : Store BCD representation of VX in M(I)..M(I+2) */
       case 0x33:
 	 CPU_Bcd( VX );
 	 //printf( "BCD:%d\n", VX );
@@ -256,7 +278,7 @@ int CPU_Step( int cycle )
 
     default:
       break;
-    } 
+    }
 
     /* */
 #if 0
@@ -281,7 +303,7 @@ BYTE CPU_Read( WORD wAddr )
     return RAM[ wAddr - 0x200 ];
   } else {
     return HEXFONT[ wAddr - CHIP8_FONT_TOP ];
-  } 
+  }
 }
 
 WORD CPU_ReadW( WORD wAddr )
@@ -296,6 +318,6 @@ void CPU_Write( WORD wAddr, BYTE byData )
     return;
   } else if ( wAddr < CHIP8_FONT_TOP ) {
     RAM[ wAddr - 0x200 ] = byData;
-    return; 
+    return;
   }
 }
